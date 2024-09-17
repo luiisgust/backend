@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erro - 404</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #BBF0C3;  
+            font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", Helvetica, Arial, sans-serif; 
+        }
+
+        #error-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 10px 10px 14px rgba(0, 0, 0, 0.1);
+        }
+
+        #error-image {
+            width: 100px;
+            height: 100px;
+        }
+
+        #error-message {
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        #error-button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .hidden {
+            display: none;
+            }
+    </style>
+</head>
+<body>
+    
+    
+    <div id="error-screen" class="hidden">
+        <img id="error-image" src="../public/image/Erro.png" alt="Imagem de erro">
+        <h1 id="error-message">Error 404</h1>
+        <a href="./index.html"><button id="error-button">Tentar novamente</button></a>
+    </div>
+</body>
+</html>

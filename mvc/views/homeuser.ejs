@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrudenTour</title>
+   <link rel="icon" href="image/person/icon.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    * {
+        margin: 0px;
+        padding: 0px;
+        box-sizing: border-box;
+    }
+
+    #map {
+        height: 100vh;
+    }
+
+    .leadlet-routing-container {
+        display: none;
+    }
+
+
+    #character {
+        position: absolute;
+        z-index: 1010;
+        transform: translateX(-50%);
+    }
+
+
+
+
+    #alerta {
+        padding: 30px;
+        min-width: 100px;
+        max-width: 500px;
+        height: auto;
+        width: auto;
+        min-height: 300px;
+        background-color: rgba(97, 241, 78, 0.8) !important;
+        color: #fff;
+        position: absolute;
+        z-index: 1100;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        flex-direction: column;
+        justify-content: space-evenly;
+        margin: 5px auto;
+        position: fixed;
+        font-family: 'Press Start 2P';
+        transform: translate(-50%, -50%);
+    }
+
+    #card {
+        width: 100px;
+        height: 100px;
+        border: 2px solid black;
+    }
+
+    #card-image {
+        position: absolute;
+        z-index: 1010;
+    }
+
+
+    #descricao {
+        float: left;
+        padding: 30px;
+        min-width: 500px;
+        max-width: 300px;
+        height: auto;
+        min-height: 300px;
+        background-color: #fff;
+        color: #fff;
+        position: absolute;
+        z-index: 1080;
+        text-align: center;
+    }
+
+    #descricao h3 {
+        font-size: 40px;
+    }
+
+    #descricao p {
+        color: #000;
+        margin-top: 10px;
+        text-align: justify;
+    }
+    
+
+    #descricao img {
+        width: 80%;
+        margin: 10px;
+    }
+
+    #descricao div {
+        background-color: rgb(97, 241, 78);
+    }
+
+    section.hud {
+        display: flex;
+        flex-direction: column !important;
+        position: absolute;
+        z-index: 1000;
+        align-items: flex-start;
+        margin: 0px;
+        padding: 5px;
+        background-color: rgba(97, 241, 78, 0.2);
+        border-radius: 12px;
+    }
+
+    .hud {
+        display: flex;
+
+    }
+
+    .hud .input-group,
+    .input-group-text {
+        background-color: rgba(255, 255, 255, 0) !important;
+        border: none;
+        height: 70px;
+        font-size: 25px;
+        font-family: 'Press Start 2P';
+        margin-top: 5px;
+    }
+
+    .input-group-text.number {
+        margin-left: -20px !important;
+        margin-left: auto
+    }
+
+    div.hud img {
+        width: 60px;
+    }
+
+    @media (min-width: 650px) {
+        div#alerta {
+            width: 60%;
+            height: 30px;
+        }
+    }
+
+    @media (min-width: 900px) {
+        div#alerta {
+            min-width: 100px;
+            max-width: 500px;
+            height: auto;
+            width: auto;
+            min-height: 300px;
+            margin: 5px auto;
+        }
+    }
+
+    @media (max-width: 600px) {
+        section.hud span {
+            width: 70px;
+
+        }
+
+        div.hud {
+            width: 300px;
+            margin-top: 5px;
+            margin-right: 5px;
+            padding: 2px;
+        }
+
+        .input-group {
+            width: 135px;
+        }
+
+        .input-group-text {
+            font-size: 18px;
+        }
+
+        .input-group-text.number {
+            margin-left: -10px !important;
+        }
+    }
+
+    .leaflet-top.leaflet-left {
+        display: none;
+    }
+
+
+    img.leaflet-marker-icon.leaflet-zoom-animated.leaflet-interactive {
+        border-radius: 50%;
+        border: 3px solid white;
+    }
+    .progress{
+        position: relative !important;
+        z-index: 2000 !important;
+        width: 100%;
+        
+    }
+    .bg-success.progress-bar-animated{
+        width: 28% !important;
+    }
+
+    
+</style>
+
+<body class="bg-light">
+    <div id="alerta" class="container bg-success text-white text-center rounded p-4">
+        <h1>Bem vindo ao PrudenTour!</h1>
+        <h6>Ande com o Personagem e descubra os atrativos de Prudente</h6>
+    </div>
+    
+    <section class="hud">
+        <div class="hud">
+            <div class="input-group mb-3">
+                <span class="input-group-text" ><img src="./image/person/hud/ppcoin.png" alt=""> </span>
+                <span class="input-group-text number" id="moeda">0</span>
+            </div>
+        </div>
+        <div class="hud">
+            <div class="input-group mb-3">
+                <span class="input-group-text"><img src="./image/person/hud/passos.png" alt=""> </span>
+                <span class="input-group-text number" id="passos">0
+            </div>
+        </div>
+        <div class="hud">
+            <div class="input-group mb-3">
+                <span class="input-group-text"> <img src="./image/person/hud/time.png" alt=""></span>
+                <span  class="input-group-text"id="hora">00</span><span class="input-group-text">:</span><span  class="input-group-text" id="minuto">00</span><span class="input-group-text">:</span><span  class="input-group-text" id="segundo">00</span>
+            </div>
+        </div>  
+        <h5>Progresso no jogo</h5>  
+        <div class="progress" role="progressbar" aria-label="Animated striped example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+           
+            <div class="progress-bar progress-bar-striped bg-success progress-bar-animated"></div>
+          </div>
+    </section>
+           
+    <div id="descricao"></div>
+    <div id="map"> <img src="./image/person/giulia.png" alt="" id="character"></div>
+    <div id="card" style="display: none;">
+        <img src="./image/person/points-jpg/museu.jpg" alt="" id="card-image">
+    </div>
+<script>   const map = L.map('map', { maxZoom: 19 }).setView([-22.120530755875148, -51.40559483356016], 18);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        minZoom: 19,
+    }).addTo(map);
+
+    // Coordenadas das atrações
+    const points = {
+        "SENAI": [-22.121229815978605, -51.40579833642255],
+        "Cidade da Criança": [-22.183350843361765, -51.38548184752809],
+        "Parque do Povo": [-22.12364769610105, -51.402420032652586],
+        "Museu Histórico": [-22.116477209903824, -51.411605061024744],
+        "Matarazzo": [-22.1205703628283, -51.379494689859534],
+        "Sesc": [-22.120517222431026, -51.41385503494615],
+        "PrudenShopping": [-22.115825865761924, -51.408900361136546]
+        // Adicione outras coordenadas aqui...
+    };
+
+    const pontosTuristicos = {
+        "SENAI": {
+            descricao: "O SENAI é uma instituição brasileira dedicada à formação profissional e técnica, focada principalmente no setor industrial. O SENAI oferece uma variedade de cursos, programas e treinamentos voltados para o desenvolvimento de habilidades técnicas e profissionais em diversos setores da indústria, como mecânica, eletrônica, automação, construção civil, informática, entre outros. Os cursos do SENAI são projetados para preparar os alunos para o mercado de trabalho e contribuir para o crescimento da indústria brasileira.",
+            imagem: "./image/person/points-jpg/senai.jpg"
+        },
+        "Cidade da Criança": {
+            descricao: "A Cidade da Criança é um parque de diversões para toda a família.",
+            imagem: "./image/person/points-jpg/cidadedacrianca.jpg"
+        },
+        "Parque do Povo": {
+            descricao: "O Parque do Povo é um ótimo lugar para relaxar e aproveitar a natureza.",
+            imagem: "./image/person/points-jpg/parquedopovo.jpg"
+        },
+    };
+
+    // Adicionar marcadores (pinos) para as capitais
+    // const markers = [];
+    // for (const point in points) {
+    //     const marker = L.marker(points[point]);
+    //     markers.push({ marker, collisionAlertShown: false }); // Adicione um objeto para rastrear o estado do alerta
+    // }
+
+    // Adicionar marcadores (pinos) para as atrações
+    const markers = [];
+    for (const point in points) {
+        markers[point] = L.marker(points[point]);
+    }
+
+
+    const character = document.getElementById('character');
+    const alerta = document.getElementById('alerta');
+    const descricao = document.getElementById('descricao');
+    document.getElementById("descricao").style.display = "none";
+
+    let xPosition = window.innerWidth / 2;
+    let yPosition = window.innerHeight / 2;
+    let imgfixa = '';
+    let imgindex = 0;
+    let bgPositionX = 0;
+    let step = 2
+
+    character.style.left = window.innerWidth / 2 + 'px';
+    character.style.top = window.innerHeight / 2 + 'px';
+
+    alerta.style.left = window.innerWidth / 2 + 'px';
+    alerta.style.top = window.innerHeight / 2 + 'px';
+
+
+
+    document.addEventListener('keydown', (event) => {
+        const key = event.key
+        document.getElementById("alerta").style.display = "none";
+        if (key === 'w'|| key =="ArrowUp") {
+            yPosition -= 2;
+            imgindex = (imgindex + 1) % 5;
+            //character  'scaleX(-1)';
+            imgfixa = './image/person/tras/tras'
+
+            checkCollisions()
+        } else if (key === 's' || key == 'ArrowDown') {
+            yPosition += 2;
+            imgindex = (imgindex + 1) % 3;
+            //character  'scaleX(-1)';
+            imgfixa = './image/person/frente/frente'
+            checkCollisions()
+        } else if (key === 'a' || key == 'ArrowLeft') {
+            xPosition -= 2;
+            imgindex = (imgindex + 1) % 8;
+            //character  'scaleX(1)';
+            imgfixa = './image/person/left/esquerda'
+            checkCollisions()
+
+        } else if (key === 'd'|| key == 'ArrowRight') {
+            xPosition += 2;
+            imgindex = (imgindex + 1) % 8;
+            //character  'scaleX(1)';
+            imgfixa = './image/person/right/giulia'
+            checkCollisions()
+        }
+
+
+
+        const imgSrc = `${imgfixa}${imgindex}.png`
+        character.src = imgSrc
+        character.style.left = xPosition + 'px';
+        character.style.top = yPosition + 'px';
+
+
+
+    });
+    // Função para verificar colisões com os marcadores
+    function checkCollisions() {
+        descricao.style.display = "none";
+        const characterRect = character.getBoundingClientRect();
+        for (const point in pontosTuristicos) {
+            const marker = markers[point];
+            const markerLatLng = marker.getLatLng();
+            const markerPos = map.latLngToContainerPoint(markerLatLng);
+
+            const proximityThreshold = 10;
+
+            if (
+                xPosition + characterRect.width > markerPos.x - proximityThreshold &&
+                xPosition < markerPos.x + 0.1 + proximityThreshold &&
+                yPosition + characterRect.height > markerPos.y - proximityThreshold &&
+                yPosition < markerPos.y + 0.1 + proximityThreshold
+            ) {
+                descricao.style.display = "block";
+                const pontoTuristico = pontosTuristicos[point];
+                descricao.innerHTML = `
+                <div><h3>${point}</h3></div>  
+            <p>${pontoTuristico.descricao}</p>
+            <img src="${pontoTuristico.imagem}" alt="${point}">
+        `;
+            }
+        }
+    }
+
+
+
+    // setInterval(checkCollisions, 500); // Verificar colisões a cada 100ms
+
+
+     setTimeout(() => {
+         document.getElementById("alerta").style.display = "none";
+     }, 5000);
+
+    //Icon point
+    var LeafIcon = L.Icon.extend({
+        options: {
+            iconSize: [120, 120],
+            iconAnchor: [5, 15],
+            popupAnchor: [3, 76]
+
+        }
+    });
+
+    var Museu = new LeafIcon({ iconUrl: './image/person/points-png/museu.png' }),
+        PqPovo = new LeafIcon({ iconUrl: './image/person/points-png/parquedopovo.png' }),
+        SENAI = new LeafIcon({ iconUrl: './image/person/points-png/senai.png' }),
+        Matarazzo = new LeafIcon({ iconUrl: './image/person/points-png/matarazzo.png' }),
+        Sesc = new LeafIcon({ iconUrl: './image/person/points-png/sesc.png' }),
+        Shopping = new LeafIcon({ iconUrl: './image/person/points-png/shopping.png' }),
+        CidadeCrianca = new LeafIcon({ iconUrl: './image/person/points-png/cidadedacrianca.png' });
+
+    L.marker([-22.116477209903824, -51.411605061024744], { icon: Museu }).addTo(map).bindPopup("Museu Histórico");
+    L.marker([-22.121229815978605, -51.40579833642255], { icon: SENAI }).addTo(map).bindPopup("SENAI");
+    L.marker([-22.12364769610105, -51.402420032652586], { icon: PqPovo }).addTo(map).bindPopup("Parque do Povo");
+    L.marker([-22.184351759921075, -51.38488907933807], { icon: CidadeCrianca }).addTo(map).bindPopup("Cidade da Criança");
+    L.marker([-22.1205703628283, -51.379494689859534], { icon: Matarazzo }).addTo(map).bindPopup("Centro Histórico Cultural Matarazzo");
+    L.marker([-22.120517222431026, -51.41385503494615], { icon: Sesc }).addTo(map).bindPopup("Sesc Thermas de Presidente Prudente");
+    L.marker([-22.115825865761924, -51.408900361136546], { icon: Shopping }).addTo(map).bindPopup("Prudenshopping");
+</script>
+<script src="/javascript/passos e modas.js"></script>
+<script src="/javascript/cronometro.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

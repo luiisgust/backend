@@ -1,0 +1,92 @@
+
+body{
+    background-color: #bbf0c3;
+}
+.bt-flutua{
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    z-index: 1000;
+    transform: translate(-50%);
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: center;
+    background-color: #fff;
+    width: 50%;
+    height: 50%;
+    border-radius: 6px;
+    box-shadow: #c5c3c3 9px 9px 10px;
+}
+
+.bv{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 5px;
+}
+.bv img{
+    width: 70%;
+}
+.login{
+    width: 40%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 15px 15px 0px 0px;
+    border-radius: 6px;
+    box-shadow: #000 3px 3px 10px;
+}
+.Button{
+    margin: 30px 0px 0px 0px;
+    padding: 15px; 
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+.bt-flutu{
+    width: auto;
+    height: auto;
+    display: flex;
+    justify-content: end;
+    align-items: end;
+    font-size: 20px;
+    margin: 0px 5px 0px 0px;
+}
+
+button{
+    display: flex;
+}
+
+.navbar{
+    height: auto;
+}
+.container img{
+    height: 40px;
+    width: 40px;
+    display: flex;
+    align-items: start;
+    justify-content: start;
+}
+
+
+
+i{
+    color: #fff;
+    font-size: 20px;
+}
+
+
+
+div.row > .col > .card{
+    background-color: #000;
+    color: #fff;
+}
+div.row > .col > .card > .card-body{
+    background-color: #fff;
+    color: #000;
+}

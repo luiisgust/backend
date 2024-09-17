@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Missões</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        i{
+            color: #fff;
+            width: 20px;
+            height: 20px;
+        }
+        .home{
+            margin: 10px 0px 0px 0px;
+        }
+        .sair{
+            margin: 10px 10px 0px 0px;
+        }
+    </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg bg-body-tertiary p-3" data-bs-theme="dark" id="top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/dashboard">
+        <img src="../image/logo1.png" alt="logo" width="50" height="50">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/atrativos">Listar Atrativos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/coin">Listar Coin</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/missao">Listar Missões</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/personagem">Listar Personagem</a>
+          </li>
+        </ul>
+          <a href="/login"><button class="btn btn-danger">Sair</button></a>
+      </div>
+    </div>
+  </nav>
+    <main>
+        <section id="altermissao">
+            <h2 class="text-center m-4">Alterar Missões</h2>
+            <form id="enviarAtualizacao">
+                <input aria-hidden="true" type="hidden" name="id" id="id" value="<%= r.id %>">
+                <div class="row">
+                    <div class="col m-4">
+                        <label for="nome" class="form-label">Nome da Missão </label>
+                        <input type="text" value="<%= r.nome %>" name="nome" id="nome" class="form-control" tabindex="1">
+                    </div>
+                    <div class="col m-4">
+                        <label for="recompensa" class="form-label">Recompensa</label>
+                        <input type="text" value="<%= r.recompensa %>" name="recompensa" id="recompensa" class="form-control" tabindex="2">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col m-4">
+                        <label for="desc" class="form-label">Descrição</label>
+                        <input type="text" value="<%= r.desc %>" name="desc" id="desc" class="form-control" tabindex="3">
+                    </div>
+                </div>
+                    <div class="row m-4">
+                        <input type="submit" value="Alterar" name="btalter" id="btalter" class="btn btn-warning mt-4 form-control" tabindex="6">
+                    </div>
+                
+            </form>
+        </section>
+    </main>
+
+    <script>
+
+        document.getElementById("enviarAtualizacao").addEventListener("submit", (e) => {
+           e.preventDefault()
+           enviar()
+        })
+   
+        async function enviar(){        
+        
+          const id = document.getElementById("id").value
+          const nome = document.getElementById("nome").value
+          const desc = document.getElementById("desc").value
+          const recompensa = document.getElementById("recompensa").value
+          
+          const data = {
+           "nome":nome,
+           "desc":desc,
+           "recompensa":recompensa,
+           "id":id
+          }  
+          const dados = await fetch('/missao/'+id, { 
+               method: 'PUT',
+               headers: {
+                   'Accept': 'application/json',
+                   'Content-Type': 'application/json'
+               },
+               body: JSON.stringify(data)
+           })
+   
+   
+           const json = await dados.json()
+           let missao = await json   
+           
+           alert(missao.msg)
+        }
+        
+   
+   
+       </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>
